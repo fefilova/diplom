@@ -1,4 +1,7 @@
 {
+  "cli": {
+    "analytics": false
+  },
     "version": 1,
     "projects": {
       "DontKnow": {
@@ -14,7 +17,7 @@
               "main": "src/main.ts",
               "polyfills": "src/polyfills.ts",
               "tsConfig": "tsconfig.json",
-              "aot": true,
+              "aot": false,
               "buildOptimizer": false,
               "optimization": false
             }

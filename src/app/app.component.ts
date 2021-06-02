@@ -1,48 +1,52 @@
 import { Component } from '@angular/core';
 import * as Highcharts from 'highcharts';
+import HC_customEvents from 'highcharts-custom-events';
+HC_customEvents(Highcharts);
+
 @Component({
-   selector: 'my-app',
-   templateUrl: 'app.component.html'
+  selector: 'my-app',
+  templateUrl: './line-chart.component.html',
+  styleUrls: ['./line-chart.component.css']
 })
-export class AppComponent {
-   highcharts = Highcharts;
-   chartOptions = {
-      chart: {
-         type: "spline"
-      },
-      title: {
-         text: "Monthly Average Temperature"
-      },
-      subtitle: {
-         text: "Source: WorldClimate.com"
-      },
-      xAxis:{
-         categories:["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-      },
-      yAxis: {          
-         title:{
-            text:"Temperature °C"
-         } 
-      },
-      tooltip: {
-         valueSuffix:" °C"
-      },
-      series: [{
-         name: 'Tokyo',
-         data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2,26.5, 23.3, 18.3, 13.9, 9.6]
-      },
-      {
-         name: 'New York',
-         data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8,24.1, 20.1, 14.1, 8.6, 2.5]
-      },
-      {
-         name: 'Berlin',
-         data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
-      },
-      {
-         name: 'London',
-         data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-        }]
-    };
+export class LineChartComponent {
+  Highcharts: typeof Highcharts = Highcharts; // Highcharts, it's Highcharts
+
+  optFromInputString: string = `
+  {
+   "title": { "text": "Highcharts chart" },
+   "xAxis": {
+     "categories": ["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011" , "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]
+  },
+   "series": [{
+     "data": [30.7, 26.8, 21.4, 19.2, 16.5, 17.2, 13.4, 14.8, 14.1, 15.6, 12.8, 13.4, 10.9, 10.6, 9.9, 10.5, 10.6, 10.9, 10.5, 10.3, 9.9]
+   }]
  }
+  `;
+
+  optFromInput: Highcharts.Options = JSON.parse(this.optFromInputString);
+  updateFromInput: boolean = false;
+
+  // Demonstrate chart instance
+  logChartInstance(chart: Highcharts.Chart) {
+    console.log('Chart instance: ', chart);
+  }
+
+  updateInputChart() {
+    this.optFromInput = JSON.parse(this.optFromInputString);
+  }
+
+  seriesTypes: {[key: string]: string} = {
+    line: 'column',
+    column: 'scatter',
+    scatter: 'spline',
+    spline: 'line'
+  };
+
+  toggleSeriesType(index: number = 0) {
+    this.optFromInput.series[index].type =
+      this.seriesTypes[this.optFromInput.series[index].type || 'line'] as
+        'column' | 'scatter' | 'spline' | 'line';
+    // nested change - must trigger update
+    this.updateFromInput = true;
+  }
+}
